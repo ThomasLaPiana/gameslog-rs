@@ -9,7 +9,7 @@ pub struct Config {
     pub port: u16,
 }
 
-pub fn read_config_file(config_file_path: &Path) -> String {
+pub fn read_file(config_file_path: &Path) -> String {
     fs::read_to_string(config_file_path).expect("File could not be read!")
 }
 
