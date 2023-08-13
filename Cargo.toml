@@ -8,3 +8,5 @@ edition = "2021"
 [dependencies]
 clap = { version = "4.3.19", features = ["derive"] }
 reqwest = { version = "0.11.18", features = ["blocking"] }
+serde = { version = "1.0.183", features = ["derive"] }
+toml = "0.7.6"
