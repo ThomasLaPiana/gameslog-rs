@@ -17,7 +17,6 @@ pub fn read_file(config_file_path: &Path) -> String {
 /// Load a TOML file into a Config struct
 pub fn load_config(raw_config: String) -> Config {
     let parsed_config: Config = toml::from_str(&raw_config).unwrap();
-    println!("Parsed Config:\n  {:?}", parsed_config);
 
     Config {
         url: parsed_config.url,

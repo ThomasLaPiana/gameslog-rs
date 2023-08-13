@@ -12,12 +12,20 @@ fn main() {
     let config_file_path = Path::new(&args.config_file);
     let raw_config = configuration::read_file(config_file_path);
     let file_configuration = configuration::load_config(raw_config);
+    println!("Parsed File:\n  {:?}", file_configuration);
+
     let configuration = configuration::combine_file_and_args(args, file_configuration);
 
+    let url = format!(
+        "{}:{}",
+        configuration.url.unwrap(),
+        configuration.port.unwrap()
+    );
+
     // Send a request
-    let response =
-        reqwest::blocking::get(&configuration.url.unwrap()).expect("HTTP Request failed!");
+    let response = reqwest::blocking::get(url).expect("HTTP Request failed!");
 
     // Show the user the output
     println!("Status: {:?}", response.status());
+    println!("Data: {:?}", response.text().unwrap());
 }
