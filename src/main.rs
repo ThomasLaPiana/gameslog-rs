@@ -1,30 +1,22 @@
+mod cli;
 mod configuration;
 use clap::Parser;
 use reqwest;
 use std::path::Path;
 
-#[derive(Parser, Debug)]
-struct Args {
-    #[arg(short, long)]
-    url: Option<String>,
-
-    #[arg(short, long, default_value = "config.toml")]
-    config_file: String,
-
-    #[arg(short, long, default_value = "8080")]
-    port: Option<u16>,
-}
-
 fn main() {
-    let args = Args::parse();
+    let args = cli::Args::parse();
     println!("Parsed Args:\n  {:?}", args);
 
+    // Build the configuration for the application
     let config_file_path = Path::new(&args.config_file);
     let raw_config = configuration::read_file(config_file_path);
-    let configuration = configuration::load_config(raw_config);
+    let file_configuration = configuration::load_config(raw_config);
+    let configuration = configuration::combine_file_and_args(args, file_configuration);
 
     // Send a request
-    let response = reqwest::blocking::get(&configuration.url).expect("HTTP Request failed!");
+    let response =
+        reqwest::blocking::get(&configuration.url.unwrap()).expect("HTTP Request failed!");
 
     // Show the user the output
     println!("Status: {:?}", response.status());
