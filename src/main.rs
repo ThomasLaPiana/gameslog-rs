@@ -18,7 +18,8 @@ fn main() {
 
     // Load the TOML file
     let config_file_path = Path::new("config.toml");
-    let configuration = configuration::load_config(&config_file_path);
+    let raw_config = configuration::read_config_file(config_file_path);
+    let configuration = configuration::load_config(raw_config);
 
     // Send a request
     let response = reqwest::blocking::get(&configuration.url).expect("HTTP Request failed!");
