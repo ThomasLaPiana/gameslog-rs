@@ -1,36 +1,30 @@
-use actix_web::middleware::Logger;
-use actix_web::{delete, get, post, App, HttpResponse, HttpServer, Responder};
-use env_logger;
+use axum::{
+    http::StatusCode,
+    response::IntoResponse,
+    routing::{get, post},
+    Json, Router,
+};
 
-#[get("/")]
-async fn view() -> impl Responder {
-    HttpResponse::Ok().body("View")
+async fn view() {
+    ()
 }
 
-#[post("/game/{name}")]
-async fn add(req_body: String) -> impl Responder {
-    HttpResponse::Ok().body(req_body)
+async fn add() {
+    ()
 }
 
-#[delete("/game/{name}")]
-async fn delete(req_body: String) -> impl Responder {
-    HttpResponse::Ok().body(req_body)
+async fn delete() {
+    ()
 }
 
-#[actix_web::main]
-async fn main() -> std::io::Result<()> {
-    env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
+#[tokio::main]
+async fn main() {
+    // build our application with a single route
+    let app = Router::new().route("/", get(|| async { "Hello, World!" }));
 
-    HttpServer::new(|| {
-        App::new()
-            .wrap(Logger::default())
-            .wrap(Logger::new("%a %{User-Agent}i"))
-            .service(view)
-            .service(add)
-            .service(delete)
-    })
-    .bind(("127.0.0.1", 8080))?
-    .workers(2)
-    .run()
-    .await
+    // run it with hyper on localhost:3000
+    axum::Server::bind(&"0.0.0.0:3000".parse().unwrap())
+        .serve(app.into_make_service())
+        .await
+        .unwrap();
 }
