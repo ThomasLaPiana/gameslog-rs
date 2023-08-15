@@ -1,1 +1,3 @@
-# Playground for Learning Various Parts of Rust
+# Gameslog
+
+A simple CLI and Webserver for keeping track of game backlogs.
