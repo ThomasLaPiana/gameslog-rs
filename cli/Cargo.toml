@@ -1,5 +1,5 @@
 [package]
-name = "rust_cli"
+name = "gameslog-cli"
 version = "0.1.0"
 edition = "2021"
 
@@ -10,8 +10,3 @@ clap = { version = "4.3.19", features = ["derive"] }
 reqwest = { version = "0.11.18", features = ["blocking"] }
 serde = { version = "1.0.183", features = ["derive"] }
 toml = "0.7.6"
-
-[[bin]]
-edition = "2021"
-name = "fides"
-path = "src/main.rs"

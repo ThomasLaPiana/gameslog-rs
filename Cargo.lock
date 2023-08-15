@@ -681,6 +681,24 @@ dependencies = [
 ]
 
 [[package]]
+name = "gameslog-cli"
+version = "0.1.0"
+dependencies = [
+ "clap",
+ "reqwest",
+ "serde",
+ "toml",
+]
+
+[[package]]
+name = "gameslog-server"
+version = "0.1.0"
+dependencies = [
+ "actix-web",
+ "env_logger",
+]
+
+[[package]]
 name = "generic-array"
 version = "0.14.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1259,16 +1277,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "rust_cli"
-version = "0.1.0"
-dependencies = [
- "clap",
- "reqwest",
- "serde",
- "toml",
-]
-
-[[package]]
 name = "rustc-demangle"
 version = "0.1.23"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1396,14 +1404,6 @@ dependencies = [
  "itoa",
  "ryu",
  "serde",
-]
-
-[[package]]
-name = "server"
-version = "0.1.0"
-dependencies = [
- "actix-web",
- "env_logger",
 ]
 
 [[package]]
