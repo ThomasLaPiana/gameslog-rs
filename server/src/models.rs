@@ -1,12 +1,12 @@
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Debug, Serialize)]
 pub enum Platform {
-    Switch(String),
-    Gamepass(String),
+    Switch,
+    Gamepass,
 }
 
-#[derive(Deserialize)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct Game {
     name: String,
     platform: Platform,

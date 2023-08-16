@@ -1,5 +1,5 @@
-use crate::models;
-use axum::{extract, routing::get, Json, Router};
+use crate::models::Game;
+use axum::{extract, routing::get, routing::post, Json, Router};
 use serde_json::{json, Value};
 
 async fn root() -> Json<Value> {
@@ -20,11 +20,9 @@ async fn get_game() -> Json<Value> {
     }))
 }
 
-async fn create_game(extract::Json(payload): extract::Json<serde_json::Value>) -> Json<Value> {
+async fn create_game(extract::Json(payload): extract::Json<Game>) -> Json<Game> {
     println!("{:?}", payload);
-    Json(json!({
-        "data": "Created a game!"
-    }))
+    Json(payload)
 }
 
 async fn delete_game() -> Json<Value> {
@@ -37,10 +35,8 @@ pub fn create_games_router() -> Router {
     let router = Router::new()
         // Add Routes
         .route("/", get(root))
-        .route(
-            "/games",
-            get(list_games).post(create_game).delete(delete_game),
-        )
+        .route("/games", get(list_games))
+        .route("/games", post(create_game))
         .route("/games/:id", get(get_game));
     router
 }
