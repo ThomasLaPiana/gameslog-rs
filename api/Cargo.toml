@@ -23,3 +23,5 @@ sea-orm = { version = "0.12", features = [
     "debug-print",
     "mock",
 ] }
+entity = { path = "../entity" }
+migration = { path = "../migration" }

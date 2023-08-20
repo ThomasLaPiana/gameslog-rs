@@ -11,3 +11,12 @@ The main purpose of this project is to learn Rust and its ecosystem, with a focu
 * Building CLIs (Clap)
 * Build Systems/Publishing (Cargo)
 * Testing
+
+## Developer Notes
+
+### Database Migrations
+
+The flow for Sea-ORM is as follows:
+1.Create a new Migration file
+2. Write the Migration by hand with the desired changes
+3. Generate the Entity

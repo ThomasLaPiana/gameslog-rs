@@ -5,9 +5,11 @@ mod models;
 mod services;
 use sea_orm::{ConnectOptions, Database, DatabaseConnection};
 
+const DATABASE_URL: &str = "sqlite://gameslog.sqlite?mode=rwc";
+
 /// Create the database connection and test it
 async fn get_db_connection() -> DatabaseConnection {
-    let mut opt = ConnectOptions::new("sqlite://gameslog.sqlite?mode=rwc");
+    let mut opt = ConnectOptions::new(DATABASE_URL);
     opt.max_connections(100)
         .min_connections(5)
         .sqlx_logging(true)
@@ -21,8 +23,16 @@ async fn get_db_connection() -> DatabaseConnection {
     db
 }
 
+/// Run all server setup logic and start the server
 #[tokio::main]
 async fn start() -> anyhow::Result<()> {
+
+    // Run migrations
+    use migration::{Migrator, MigratorTrait};
+
+    let connection = sea_orm::Database::connect(DATABASE_URL).await?;
+    Migrator::up(&connection, None).await?;
+
     let _db_connection = get_db_connection().await;
     // Set tracing for logs
     tracing_subscriber::fmt()
