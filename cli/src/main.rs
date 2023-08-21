@@ -5,22 +5,35 @@ use serde::Serialize;
 
 #[derive(Debug, Serialize)]
 struct GameInfo {
-    name: String,
+    title: String,
     platform: String,
 }
 
-/// Viewing the command
-fn view_command(full_url: String) {
+/// View command
+fn view_command() {
     let client = reqwest::blocking::Client::new();
-    let response = client.get(full_url).send().unwrap();
-    println!("{:?}", response);
+    let response = client
+        .get("http://localhost:8080/games".to_string())
+        .send()
+        .unwrap();
+
+    let status = response.status();
+    let body = response.text().unwrap();
+    println!("Status: {}\nResponse Body: {:?}", status, body);
 }
 
 /// Send a new Game to the webserver
-fn add_command(full_url: String, new_game: GameInfo) {
+fn add_command(new_game: GameInfo) {
     let client = reqwest::blocking::Client::new();
-    let response = client.post(full_url).form(&new_game).send().unwrap();
-    println!("{:?}", response)
+    let response = client
+        .post("http://localhost:8080/games".to_string())
+        .json(&new_game)
+        .send()
+        .unwrap();
+
+    let status = response.status();
+    let body = response.text().unwrap();
+    println!("Status: {}\nResponse Body: {:?}", status, body);
 }
 
 /// Delete a Game from the webserver
@@ -41,21 +54,21 @@ fn main() {
         // View
         Some(("view", _)) => {
             println!("> Printing out the Gameslog");
-            view_command(full_url);
+            view_command();
         }
         // Add
         Some(("add", sub_matches)) => {
-            let name = sub_matches.get_one::<String>("name").unwrap().to_string();
+            let title = sub_matches.get_one::<String>("title").unwrap().to_string();
             let platform = sub_matches
                 .get_one::<String>("platform")
                 .expect("No platform found!")
                 .to_string();
             let new_game = GameInfo {
-                name: name,
+                title: title,
                 platform: platform,
             };
             println!("Adding a new game:\n  {:?}", new_game);
-            add_command(full_url, new_game);
+            add_command(new_game);
         }
         // Delete
         Some(("delete", sub_matches)) => {

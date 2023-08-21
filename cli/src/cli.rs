@@ -28,7 +28,7 @@ pub fn cli() -> Command {
             Command::new("add")
                 .about("Add a Game")
                 .arg_required_else_help(true)
-                .arg(arg!(name: [NAME]))
+                .arg(arg!(title: [TITLE]))
                 .arg(arg!(platform: [PLATFORM])),
         )
         // Delete

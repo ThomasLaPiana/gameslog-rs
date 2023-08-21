@@ -8,7 +8,7 @@ publish = false
 
 [workspace]
 members = [".", "cli", "api", "entity", "migration"]
-default-members = [".", "api"]
+default-members = [".", "api", "cli"]
 
 [dependencies]
 gameslog-api = { path = "api" }
