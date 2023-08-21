@@ -63,10 +63,7 @@ fn main() {
                 .get_one::<String>("platform")
                 .expect("No platform found!")
                 .to_string();
-            let new_game = GameInfo {
-                title: title,
-                platform: platform,
-            };
+            let new_game = GameInfo { title, platform };
             println!("Adding a new game:\n  {:?}", new_game);
             add_command(new_game);
         }
