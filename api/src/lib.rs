@@ -1,44 +1,22 @@
 use tower_http::trace::{self, TraceLayer};
-use tracing::log;
 use tracing::Level;
+mod database;
 mod models;
 mod services;
-use sea_orm::{ConnectOptions, Database, DatabaseConnection};
-
-const DATABASE_URL: &str = "sqlite://gameslog.sqlite?mode=rwc";
-
-/// Create the database connection and test it
-async fn get_db_connection() -> DatabaseConnection {
-    let mut opt = ConnectOptions::new(DATABASE_URL);
-    opt.max_connections(100)
-        .min_connections(5)
-        .sqlx_logging(true)
-        .sqlx_logging_level(log::LevelFilter::Info);
-
-    let db = Database::connect(opt).await.unwrap();
-
-    // Test the db connection
-    assert!(db.ping().await.is_ok());
-
-    db
-}
 
 /// Run all server setup logic and start the server
 #[tokio::main]
 async fn start() -> anyhow::Result<()> {
-    // Run migrations
-    use migration::{Migrator, MigratorTrait};
+    println!("> Running Migrations...");
+    database::run_migrations().await;
 
-    let connection = sea_orm::Database::connect(DATABASE_URL).await?;
-    Migrator::up(&connection, None).await?;
-
-    let _db_connection = get_db_connection().await;
     // Set tracing for logs
     tracing_subscriber::fmt()
         .with_target(false)
         .compact()
         .init();
 
+    println!("> Building Routers...");
     let app = services::create_games_router()
         // Add Logging
         .layer(
@@ -48,6 +26,7 @@ async fn start() -> anyhow::Result<()> {
         );
 
     // run it with hyper on localhost:3000
+    println!("> Starting server!");
     axum::Server::bind(&"0.0.0.0:8080".parse().unwrap())
         .serve(app.into_make_service())
         .await?;

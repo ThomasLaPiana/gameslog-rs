@@ -1,6 +1,9 @@
+use crate::database;
 use crate::models::Game;
 use axum::{extract, routing::delete, routing::get, routing::post, Json, Router};
 use entity::game;
+use sea_orm::ActiveValue::Set;
+use sea_orm::{ActiveModelTrait, EntityTrait};
 use serde_json::{json, Value};
 
 async fn root() -> Json<Value> {
@@ -15,25 +18,38 @@ async fn health() -> Json<Value> {
     }))
 }
 
+/// List all of the games stored in the database
 async fn list_games() -> Json<Value> {
-    Json(json!({
-        "data": "Here are some games!"
-    }))
+    let db = database::get_db_connection().await;
+    let games = game::Entity::find().into_json().all(&db).await.unwrap();
+    Json(json!({ "data": games }))
 }
 
+/// Get a specific game by its ID
 async fn get_game(extract::Path(game_id): extract::Path<String>) -> Json<Value> {
     Json(json!({ "data": format!("Retrieved: {}!", game_id) }))
 }
 
+/// Add a new game to the Gameslog
 async fn create_game(extract::Json(payload): extract::Json<Game>) -> Json<Value> {
     println!("{:?}", payload);
+
+    let new_game = game::ActiveModel {
+        title: Set(payload.title.clone()),
+        platform: Set(payload.platform.to_string()),
+        ..Default::default()
+    };
+    let db = database::get_db_connection().await;
+    new_game.insert(&db).await.unwrap();
     Json(json!({ "data": payload }))
 }
 
+/// Remove a game from the Gameslog
 async fn delete_game(extract::Path(game_id): extract::Path<String>) -> Json<Value> {
     Json(json!({ "data": format!("Deleted: {}!", game_id) }))
 }
 
+/// Create a router with all of the endpoints used by the Games service
 pub fn create_games_router() -> Router {
     let router = Router::new()
         // Add Routes
@@ -60,8 +76,6 @@ mod tests {
     async fn test_health() {
         let app = create_games_router();
 
-        // `Router` implements `tower::Service<Request<Body>>` so we can
-        // call it like any tower service, no need to run an HTTP server.
         let response = app
             .oneshot(
                 Request::builder()
@@ -82,6 +96,7 @@ mod tests {
     #[tokio::test]
     async fn test_create_game() {
         let app = create_games_router();
+        database::run_migrations().await;
 
         // Build the request
         let request = Request::builder()
