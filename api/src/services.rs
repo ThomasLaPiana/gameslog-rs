@@ -1,11 +1,15 @@
 use crate::database;
 use crate::models::Game;
-use axum::{extract, routing::delete, routing::get, routing::post, Json, Router};
+use axum::http::StatusCode;
+use axum::response::{IntoResponse, Response};
+use axum::routing::{delete, get, post};
+use axum::{extract, Json, Router};
 use entity::game;
 use sea_orm::ActiveValue::Set;
 use sea_orm::{ActiveModelTrait, EntityTrait};
 use serde_json::{json, Value};
 
+// Generic welcome
 async fn root() -> Json<Value> {
     Json(json!({
         "data": "You've reached the Gameslog server!"
@@ -19,19 +23,33 @@ async fn health() -> Json<Value> {
 }
 
 /// List all of the games stored in the database
-async fn list_games() -> Json<Value> {
+async fn list_games() -> Response {
     let db = database::get_db_connection().await;
     let games = game::Entity::find().into_json().all(&db).await.unwrap();
-    Json(json!({ "data": games }))
+    (StatusCode::OK, Json(json!({ "data": games }))).into_response()
 }
 
 /// Get a specific game by its ID
-async fn get_game(extract::Path(game_id): extract::Path<String>) -> Json<Value> {
-    Json(json!({ "data": format!("Retrieved: {}!", game_id) }))
+async fn get_game(extract::Path(game_id): extract::Path<String>) -> Response {
+    let db = database::get_db_connection().await;
+    let game = game::Entity::find_by_id(&game_id)
+        .into_json()
+        .one(&db)
+        .await;
+
+    match game {
+        Ok(game) => (StatusCode::OK, Json(json!({ "data": game }))).into_response(),
+        Err(_) => (
+            StatusCode::INTERNAL_SERVER_ERROR,
+            Json(json!({
+                "data": "Fata error occured!"})),
+        )
+            .into_response(),
+    }
 }
 
 /// Add a new game to the Gameslog
-async fn create_game(extract::Json(payload): extract::Json<Game>) -> Json<Value> {
+async fn create_game(extract::Json(payload): extract::Json<Game>) -> Response {
     println!("{:?}", payload);
 
     let game_title = payload.title.clone();
@@ -48,8 +66,15 @@ async fn create_game(extract::Json(payload): extract::Json<Game>) -> Json<Value>
         ..Default::default()
     };
     let db = database::get_db_connection().await;
-    new_game.insert(&db).await.unwrap();
-    Json(json!({ "data": payload }))
+
+    match new_game.insert(&db).await {
+        Ok(_) => (StatusCode::CREATED, Json(json!({ "data": payload }))).into_response(),
+        Err(insertion) => (
+            StatusCode::CONFLICT,
+            Json(json!({ "data": insertion.to_string()})),
+        )
+            .into_response(),
+    }
 }
 
 /// Remove a game from the Gameslog
@@ -59,7 +84,6 @@ async fn delete_game(extract::Path(game_id): extract::Path<String>) -> Json<Valu
 
 /// Create a router with all of the endpoints used by the Games service
 pub fn create_games_router() -> Router {
-    
     Router::new()
         // Add Routes
         .route("/", get(root))

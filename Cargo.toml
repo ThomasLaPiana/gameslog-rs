@@ -5,6 +5,7 @@ authors = ["ThomasLaPiana"]
 edition = "2021"
 publish = false
 
+default-run = "gameslog"
 
 [workspace]
 members = [".", "cli", "api", "entity", "migration"]
