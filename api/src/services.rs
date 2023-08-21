@@ -59,15 +59,15 @@ async fn delete_game(extract::Path(game_id): extract::Path<String>) -> Json<Valu
 
 /// Create a router with all of the endpoints used by the Games service
 pub fn create_games_router() -> Router {
-    let router = Router::new()
+    
+    Router::new()
         // Add Routes
         .route("/", get(root))
         .route("/health", get(health))
         .route("/games", get(list_games))
         .route("/games", post(create_game))
         .route("/games/:game_id", delete(delete_game))
-        .route("/games/:game_id", get(get_game));
-    router
+        .route("/games/:game_id", get(get_game))
 }
 
 #[cfg(test)]
@@ -121,7 +121,7 @@ mod tests {
         let response = app.oneshot(request).await.unwrap();
 
         // Load the status and body as bytes for use in assertions
-        let status = response.status().clone();
+        let status = response.status();
         let body = hyper::body::to_bytes(response.into_body()).await.unwrap();
 
         assert_eq!(
@@ -157,7 +157,7 @@ mod tests {
         let response = app.oneshot(request).await.unwrap();
 
         // Load the status and body as bytes for use in assertions
-        let status = response.status().clone();
+        let status = response.status();
 
         assert_eq!(status, StatusCode::UNPROCESSABLE_ENTITY,);
     }

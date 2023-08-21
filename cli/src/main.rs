@@ -1,6 +1,6 @@
 mod cli;
 use clap::ArgMatches;
-use reqwest;
+
 use serde::Serialize;
 
 #[derive(Debug, Serialize)]
