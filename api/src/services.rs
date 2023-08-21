@@ -9,6 +9,18 @@ use sea_orm::ActiveValue::Set;
 use sea_orm::{ActiveModelTrait, EntityTrait};
 use serde_json::{json, Value};
 
+/// Create a router with all of the endpoints used by the Games service
+pub fn create_games_router() -> Router {
+    Router::new()
+        // Add Routes
+        .route("/", get(root))
+        .route("/health", get(health))
+        .route("/games", get(list_games))
+        .route("/games", post(create_game))
+        .route("/games/:game_id", delete(delete_game))
+        .route("/games/:game_id", get(get_game))
+}
+
 // Generic welcome
 async fn root() -> Json<Value> {
     Json(json!({
@@ -50,8 +62,6 @@ async fn get_game(extract::Path(game_id): extract::Path<String>) -> Response {
 
 /// Add a new game to the Gameslog
 async fn create_game(extract::Json(payload): extract::Json<Game>) -> Response {
-    println!("{:?}", payload);
-
     let game_title = payload.title.clone();
     let normalized_platforms = payload
         .platforms
@@ -70,7 +80,7 @@ async fn create_game(extract::Json(payload): extract::Json<Game>) -> Response {
     match new_game.insert(&db).await {
         Ok(_) => (StatusCode::CREATED, Json(json!({ "data": payload }))).into_response(),
         Err(insertion) => (
-            StatusCode::CONFLICT,
+            StatusCode::INTERNAL_SERVER_ERROR,
             Json(json!({ "data": insertion.to_string()})),
         )
             .into_response(),
@@ -78,20 +88,25 @@ async fn create_game(extract::Json(payload): extract::Json<Game>) -> Response {
 }
 
 /// Remove a game from the Gameslog
-async fn delete_game(extract::Path(game_id): extract::Path<String>) -> Json<Value> {
-    Json(json!({ "data": format!("Deleted: {}!", game_id) }))
-}
+async fn delete_game(extract::Path(game_id): extract::Path<String>) -> Response {
+    let db = database::get_db_connection().await;
+    let result = game::Entity::delete_by_id(&game_id).exec(&db).await;
 
-/// Create a router with all of the endpoints used by the Games service
-pub fn create_games_router() -> Router {
-    Router::new()
-        // Add Routes
-        .route("/", get(root))
-        .route("/health", get(health))
-        .route("/games", get(list_games))
-        .route("/games", post(create_game))
-        .route("/games/:game_id", delete(delete_game))
-        .route("/games/:game_id", get(get_game))
+    match result {
+        Ok(_) => (
+            StatusCode::NO_CONTENT,
+            Json(json!({
+                "data": format!("Game with ID '{}' deleted!", game_id)
+            })),
+        )
+            .into_response(),
+        Err(result) => (
+            StatusCode::INTERNAL_SERVER_ERROR,
+            Json(json!({
+                "data": result.to_string()})),
+        )
+            .into_response(),
+    }
 }
 
 #[cfg(test)]
