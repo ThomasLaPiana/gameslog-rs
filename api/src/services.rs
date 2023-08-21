@@ -165,7 +165,7 @@ mod tests {
 
         assert_eq!(
             status,
-            StatusCode::OK,
+            StatusCode::CREATED,
             "Assertion Failed due to: {:?}",
             String::from_utf8(body.to_vec()).unwrap()
         );
