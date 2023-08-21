@@ -26,7 +26,6 @@ async fn get_db_connection() -> DatabaseConnection {
 /// Run all server setup logic and start the server
 #[tokio::main]
 async fn start() -> anyhow::Result<()> {
-
     // Run migrations
     use migration::{Migrator, MigratorTrait};
 

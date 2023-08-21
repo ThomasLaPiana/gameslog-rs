@@ -8,6 +8,6 @@ pub enum Platform {
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Game {
-    name: String,
+    title: String,
     platform: Platform,
 }

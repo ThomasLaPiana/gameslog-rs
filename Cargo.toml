@@ -5,8 +5,10 @@ authors = ["ThomasLaPiana"]
 edition = "2021"
 publish = false
 
+
 [workspace]
 members = [".", "cli", "api", "entity", "migration"]
+default-members = [".", "api"]
 
 [dependencies]
 gameslog-api = { path = "api" }

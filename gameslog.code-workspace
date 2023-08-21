@@ -1,13 +1,14 @@
 {
-	"folders": [
-		{
-			"path": "."
-		}
-	],
-	"settings": {
-		"rust-analyzer.linkedProjects": [
-			".\\cli\\Cargo.toml",
-			".\\server\\Cargo.toml"
-		]
-	}
+  "folders": [
+    {
+      "path": "."
+    }
+  ],
+  "settings": {
+    "rust-analyzer.linkedProjects": [
+      ".\\cli\\Cargo.toml",
+      ".\\server\\Cargo.toml",
+      ".\\entity\\Cargo.toml"
+    ]
+  }
 }

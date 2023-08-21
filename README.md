@@ -14,9 +14,14 @@ The main purpose of this project is to learn Rust and its ecosystem, with a focu
 
 ## Developer Notes
 
+### Requirements
+
+1. Cargo
+1. Sea ORM CLI (`cargo install sea-orm-cli`)
+
 ### Database Migrations
 
-The flow for Sea-ORM is as follows:
-1.Create a new Migration file
-2. Write the Migration by hand with the desired changes
-3. Generate the Entity
+1. Run `sea-orm-cli migrate generate <migration_name>` from the root dir
+1. Import the new migration file into `migration/src/lib.rs` using `mod` and add it to the migration Vector in chronological order
+1. Run `sea-orm-cli migrate up` from the root dir
+1. Run `sea-orm-cli generate entity -o entity/src` from the root dir
