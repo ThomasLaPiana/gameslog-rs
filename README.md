@@ -12,6 +12,17 @@ The main purpose of this project is to learn Rust and its ecosystem, with a focu
 * Build Systems/Publishing (Cargo)
 * Testing
 
+## Usage
+
+The first thing to do to get up and running is to `git clone` the repo and make sure you have `cargo` installed.
+
+From the root of the directory, run `cargo run --bin gameslog` to spin up the server, create the serverfile (SQLite) and run the migrations. You're ready to start adding games!
+
+Games can be added one of two ways:
+
+1. Via the REST API
+1. Via the CLI, which you can run with `cargo run --bin gameslog-cli -- -h`
+
 ## Developer Notes
 
 ### Requirements
