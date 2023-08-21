@@ -1,3 +1,4 @@
+/// These models need to stay in sync with the Sea ORM 'entities'
 use core::fmt;
 
 use serde::{Deserialize, Serialize};
@@ -20,5 +21,5 @@ impl std::fmt::Display for Platform {
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Game {
     pub title: String,
-    pub platform: Platform,
+    pub platforms: Vec<Platform>,
 }

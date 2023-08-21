@@ -25,3 +25,9 @@ pub async fn run_migrations() {
     let db_connection = get_db_connection().await;
     Migrator::up(&db_connection, None).await.unwrap();
 }
+
+/// Reset the database and run migrations
+pub async fn reset_database() {
+    let db_connection = get_db_connection().await;
+    Migrator::fresh(&db_connection).await.unwrap();
+}

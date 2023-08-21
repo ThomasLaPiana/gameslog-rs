@@ -12,6 +12,11 @@ The main purpose of this project is to learn Rust and its ecosystem, with a focu
 * Build Systems/Publishing (Cargo)
 * Testing
 
+## Requirements
+
+1. Cargo
+1. Sea ORM CLI (`cargo install sea-orm-cli`)
+
 ## Usage
 
 The first thing to do to get up and running is to `git clone` the repo and make sure you have `cargo` installed.
@@ -25,14 +30,10 @@ Games can be added one of two ways:
 
 ## Developer Notes
 
-### Requirements
-
-1. Cargo
-1. Sea ORM CLI (`cargo install sea-orm-cli`)
-
 ### Database Migrations
 
 1. Run `sea-orm-cli migrate generate <migration_name>` from the root dir
 1. Import the new migration file into `migration/src/lib.rs` using `mod` and add it to the migration Vector in chronological order
 1. Run `sea-orm-cli migrate up` from the root dir
 1. Run `sea-orm-cli generate entity -o entity/src` from the root dir
+1. Update `api/src/models.rs` to match the new entities

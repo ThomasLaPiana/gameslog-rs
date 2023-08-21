@@ -10,6 +10,7 @@
 
 ## Wholly New Features
 
+* CI/CD pipelines
 * Front-end using WASM or HTMX
 * Add users and authentication
 * Add the actual "gameslog" backlog tracker
