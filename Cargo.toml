@@ -8,8 +8,8 @@ publish = false
 default-run = "gameslog"
 
 [workspace]
-members = [".", "cli", "api", "entity", "migration"]
-default-members = [".", "api", "cli"]
+members = [".", "cli", "webserver", "entity", "migration"]
+default-members = [".", "webserver", "cli"]
 
 [dependencies]
-gameslog-api = { path = "api" }
+gameslog-api = { path = "webserver" }

@@ -8,7 +8,18 @@
     "rust-analyzer.linkedProjects": [
       ".\\cli\\Cargo.toml",
       ".\\server\\Cargo.toml",
-      ".\\entity\\Cargo.toml"
-    ]
+      ".\\entity\\Cargo.toml",
+      ".\\api\\Cargo.toml",
+      ".\\api\\Cargo.toml",
+      ".\\api\\Cargo.toml",
+      ".\\api\\Cargo.toml",
+      ".\\webserver\\Cargo.toml",
+      ".\\webserver\\Cargo.toml",
+      ".\\webserver\\Cargo.toml",
+      ".\\webserver\\Cargo.toml",
+      ".\\webserver\\Cargo.toml",
+      ".\\webserver\\Cargo.toml"
+    ],
+    "rust-analyzer.showUnlinkedFileNotification": false
   }
 }

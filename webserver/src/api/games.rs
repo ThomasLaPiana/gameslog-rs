@@ -13,12 +13,12 @@ use serde_json::{json, Value};
 pub fn create_games_router() -> Router {
     Router::new()
         // Add Routes
-        .route("/", get(root))
+        .route("/api", get(root))
         .route("/health", get(health))
-        .route("/games", get(list_games))
-        .route("/games", post(create_game))
-        .route("/games/:game_id", delete(delete_game))
-        .route("/games/:game_id", get(get_game))
+        .route("/api/games", get(list_games))
+        .route("/api/games", post(create_game))
+        .route("/api/games/:game_id", delete(delete_game))
+        .route("/api/games/:game_id", get(get_game))
 }
 
 // Generic welcome
@@ -149,7 +149,7 @@ mod tests {
         // Build the request
         let request = Request::builder()
             .method(http::Method::POST)
-            .uri("/games")
+            .uri("/api/games")
             .header("content-type", "application/json")
             .body(Body::from(
                 r#"{"title": "Legend of Zelda", "platforms": ["Switch"]}"#,
@@ -185,7 +185,7 @@ mod tests {
         // Build the request
         let request = Request::builder()
             .method(http::Method::POST)
-            .uri("/games")
+            .uri("/api/games")
             .header("content-type", "application/json")
             .body(Body::from(
                 r#"{"title": "Legend of Zelda", "platforms": "Switch"}"#,
