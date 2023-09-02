@@ -1,14 +1,9 @@
+use crate::database;
+use crate::games_api;
+use crate::games_views;
 use axum::Router;
 use tower_http::trace::{self, TraceLayer};
 use tracing::Level;
-mod api {
-    pub mod games;
-}
-mod database;
-mod models;
-mod views {
-    pub mod games;
-}
 
 /// Run all server setup logic and start the server
 #[tokio::main]
@@ -23,7 +18,7 @@ async fn start() -> anyhow::Result<()> {
         .init();
 
     println!("> Building Routers...");
-    let games_api = api::games::create_games_router()
+    let games_api = games_api::create_games_router()
         // Add Logging
         .layer(
             TraceLayer::new_for_http()
@@ -31,7 +26,7 @@ async fn start() -> anyhow::Result<()> {
                 .on_response(trace::DefaultOnResponse::new().level(Level::INFO)),
         );
 
-    let games_views = views::games::create_game_views_router();
+    let games_views = games_views::create_game_views_router();
     let app = Router::new().merge(games_api).merge(games_views);
 
     // run it with hyper on localhost:3000
@@ -43,7 +38,7 @@ async fn start() -> anyhow::Result<()> {
     Ok(())
 }
 
-pub fn main() {
+pub fn start_webserver() {
     let result = start();
 
     if let Some(err) = result.err() {

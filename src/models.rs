@@ -23,3 +23,9 @@ pub struct Game {
     pub title: String,
     pub platforms: Vec<Platform>,
 }
+
+#[derive(Serialize, Deserialize, Debug)]
+pub struct GameResponse {
+    pub data: Game,
+    pub errors: Vec<String>,
+}

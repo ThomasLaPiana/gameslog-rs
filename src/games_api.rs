@@ -1,5 +1,5 @@
 use crate::database;
-use crate::models::Game;
+use crate::models::{Game, GameResponse};
 use axum::http::StatusCode;
 use axum::response::{IntoResponse, Response};
 use axum::routing::{delete, get, post};
