@@ -11,9 +11,7 @@ pub fn cli() -> Command {
     // Gameslog entrypoint
     Command::new("gameslog")
         .about("A CLI to interact with the Gameslog webserver.")
-        .subcommand_required(true)
         .arg_required_else_help(true)
-        .allow_external_subcommands(true)
         .arg(
             Arg::new("url")
                 .short('u')
