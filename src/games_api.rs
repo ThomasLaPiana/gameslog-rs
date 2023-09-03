@@ -44,16 +44,19 @@ async fn list_games() -> Response {
 /// Get a specific game by its ID
 async fn get_game(extract::Path(game_id): extract::Path<String>) -> Response {
     let mut db = database::get_db_connection().await.unwrap();
+    // TODO: Make the match case insensitive
     let game = sqlx::query_as!(
         Game,
         "SELECT title, platforms FROM games where title = ?",
         game_id
     )
     .fetch_one(&mut db)
-    .await
-    .unwrap();
+    .await;
 
-    (StatusCode::OK, Json(json!({ "data": game }))).into_response()
+    match game {
+        Ok(game) => (StatusCode::OK, Json(json!({ "data": game }))).into_response(),
+        _ => (StatusCode::OK, Json(json!({ "data": ""}))).into_response(),
+    }
 }
 
 /// Add a new game to the Gameslog
@@ -61,6 +64,7 @@ async fn create_game(extract::Json(payload): extract::Json<Game>) -> Response {
     let game_title = payload.title.clone();
     let game_platforms = payload.platforms.clone();
 
+    // TOOD: enforce uniqueness
     let mut db = database::get_db_connection().await.unwrap();
     sqlx::query!("INSERT INTO games VALUES(?, ?)", game_title, game_platforms,)
         .execute(&mut db)
@@ -113,7 +117,7 @@ mod tests {
             .uri("/api/games")
             .header("content-type", "application/json")
             .body(Body::from(
-                r#"{"title": "Legend of Zelda", "platforms": ["Switch"]}"#,
+                r#"{"title": "Legend of Zelda", "platforms": "Switch"}"#,
             ))
             .unwrap();
 
@@ -134,12 +138,34 @@ mod tests {
         let body: Value = serde_json::from_slice(&body).unwrap();
         assert_eq!(
             body,
-            json!({ "data": {"title": "Legend of Zelda", "platforms": ["Switch"]} })
+            json!({ "data": {"title": "Legend of Zelda", "platforms": "Switch"} })
         );
     }
 
     #[tokio::test]
+    async fn test_get_nonexistent_game() {
+        let app = create_games_router();
+
+        let response = app
+            .oneshot(
+                Request::builder()
+                    .uri("/api/games/foo")
+                    .body(Body::empty())
+                    .unwrap(),
+            )
+            .await
+            .unwrap();
+
+        assert_eq!(response.status(), StatusCode::OK);
+
+        let body = hyper::body::to_bytes(response.into_body()).await.unwrap();
+        let body: Value = serde_json::from_slice(&body).unwrap();
+        assert_eq!(body, json!({ "data": "" }));
+    }
+
+    #[tokio::test]
     async fn test_create_game_invalid() {
+        // Create database if not exists:
         let app = create_games_router();
         database::run_migrations().await.unwrap();
 
@@ -149,7 +175,7 @@ mod tests {
             .uri("/api/games")
             .header("content-type", "application/json")
             .body(Body::from(
-                r#"{"title": "Legend of Zelda", "platforms": "Switch"}"#,
+                r#"{"title": "Legend of Zelda", "platforms": ["Switch"]}"#,
             ))
             .unwrap();
 
@@ -163,7 +189,7 @@ mod tests {
     }
 
     #[tokio::test]
-    async fn not_found() {
+    async fn route_not_found() {
         let app = create_games_router();
 
         let response = app

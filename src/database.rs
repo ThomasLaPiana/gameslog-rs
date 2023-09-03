@@ -16,8 +16,20 @@ pub async fn get_db_connection() -> sqlx::Result<sqlite::SqliteConnection> {
     Ok(db_conn)
 }
 
-/// Run any pending migrations
+/// Create the database if needed and run migrations
 pub async fn run_migrations() -> Result<(), sqlx::Error> {
+    if !sqlx::Sqlite::database_exists(DATABASE_URL)
+        .await
+        .unwrap_or(false)
+    {
+        match sqlx::Sqlite::create_database(DATABASE_URL).await {
+            Ok(_) => println!("Database created"),
+            Err(e) => println!("Error creating database: {}", e),
+        }
+    } else {
+        println!("Database already exists");
+    }
+
     let mut db_connection = get_db_connection().await?;
     sqlx::migrate!("src/migrations")
         .run(&mut db_connection)
