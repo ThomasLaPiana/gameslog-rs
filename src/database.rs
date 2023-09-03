@@ -1,33 +1,26 @@
-use migration::{Migrator, MigratorTrait};
-use sea_orm::{ConnectOptions, Database, DatabaseConnection};
-use tracing::log;
+use sqlx;
+use sqlx::{sqlite, ConnectOptions, Connection};
+use std::str::FromStr;
 
 const DATABASE_URL: &str = "sqlite://gameslog.sqlite?mode=rwc";
 
 /// Create the database connection and test it
-pub async fn get_db_connection() -> DatabaseConnection {
-    let mut opt = ConnectOptions::new(DATABASE_URL);
-    opt.max_connections(100)
-        .min_connections(5)
-        .sqlx_logging(true)
-        .sqlx_logging_level(log::LevelFilter::Info);
-
-    let db = Database::connect(opt).await.unwrap();
+pub async fn get_db_connection() -> sqlx::Result<sqlite::SqliteConnection> {
+    let mut db_conn = sqlite::SqliteConnectOptions::from_str(DATABASE_URL)?
+        .connect()
+        .await?;
 
     // Test the db connection
-    assert!(db.ping().await.is_ok());
+    db_conn.ping().await.expect("Database Ping Failed!");
 
-    db
+    Ok(db_conn)
 }
 
 /// Run any pending migrations
-pub async fn run_migrations() {
-    let db_connection = get_db_connection().await;
-    Migrator::up(&db_connection, None).await.unwrap();
-}
-
-/// Reset the database and run migrations
-pub async fn reset_database() {
-    let db_connection = get_db_connection().await;
-    Migrator::fresh(&db_connection).await.unwrap();
+pub async fn run_migrations() -> Result<(), sqlx::Error> {
+    let mut db_connection = get_db_connection().await?;
+    sqlx::migrate!("src/migrations")
+        .run(&mut db_connection)
+        .await?;
+    Ok(())
 }

@@ -1,13 +1,11 @@
 use crate::database;
-use crate::models::{Game};
+use crate::models::Game;
 use axum::http::StatusCode;
 use axum::response::{IntoResponse, Response};
 use axum::routing::{delete, get, post};
 use axum::{extract, Json, Router};
-use entity::game;
-use sea_orm::ActiveValue::Set;
-use sea_orm::{ActiveModelTrait, EntityTrait};
 use serde_json::{json, Value};
+use sqlx;
 
 /// Create a router with all of the endpoints used by the Games service
 pub fn create_games_router() -> Router {
@@ -37,7 +35,10 @@ async fn health() -> Json<Value> {
 /// List all of the games stored in the database
 async fn list_games() -> Response {
     let db = database::get_db_connection().await;
-    let games = game::Entity::find().into_json().all(&db).await.unwrap();
+    let games = sqlx::query_as!(Vec<Game>, "SELECT title, platform FROM games")
+        .fetch_all(&mut db)
+        .await
+        .unwrap();
     (StatusCode::OK, Json(json!({ "data": games }))).into_response()
 }
 

@@ -9,11 +9,11 @@ The main purpose of this project is to learn about Rust and its ecosystem, with 
 * Building backend services (Axum)
 * Persisting data via SQLite (sqlx)
 * Building CLIs (Clap)
-* Build Systems/Publishing (Cargo)
+* Build Systems/Publishing (Cargo, Cross)
 * Testing
-* Front-End (HTMX/Askama)
+* Front-End (HTMX/Askama/Tailwind)
 
-## Requirements
+## System Requirements
 
 1. Cargo
 2. npm
@@ -29,12 +29,29 @@ Games can be added one of two ways:
 1. Via the REST API
 1. Via the CLI
 
-## Developer Notes
+## Development
+
+### Developer Requirements
+
+For development, the following additional installations are recommended and assumed:
+
+* `cargo install sqlx-cli`
+* `cargo install cargo-watch`
+
+### Building & Testing
+
+The following is a list of helpful commands for getting started:
+
+* `cargo check` - Runs basic static analysis without the overhead of building
+* `cargo build` - Checks and builds the crate
+* `cargo test` - Runs unit and integration tests. This also compiles the crate.
+* `cargo run` - Runs the application (the CLI in this case)
+
+Additionally there is a helpful utility called `cargo-watch` that will automatically run a certain command when file changes are detected. It can be installed and invoked like so:
+
+* `cargo install cargo-watch`
+* `cargo watch -x <build|check|run|test>`
 
 ### Database Migrations (To be changed)
 
-1. Run `sea-orm-cli migrate generate <migration_name>` from the root dir
-1. Import the new migration file into `migration/src/lib.rs` using `mod` and add it to the migration Vector in chronological order
-1. Run `sea-orm-cli migrate up` from the root dir
-1. Run `sea-orm-cli generate entity -o entity/src` from the root dir
-1. Update `api/src/models.rs` to match the new entities
+1. `sqlx migrate run --source src/migrations/`
