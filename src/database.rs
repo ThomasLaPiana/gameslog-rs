@@ -1,5 +1,5 @@
 use sqlx;
-use sqlx::{sqlite, ConnectOptions, Connection};
+use sqlx::{migrate::MigrateDatabase, sqlite, ConnectOptions, Connection};
 use std::str::FromStr;
 
 const DATABASE_URL: &str = "sqlite://gameslog.sqlite?mode=rwc";
@@ -22,5 +22,10 @@ pub async fn run_migrations() -> Result<(), sqlx::Error> {
     sqlx::migrate!("src/migrations")
         .run(&mut db_connection)
         .await?;
+    Ok(())
+}
+
+pub fn reset_database() -> Result<(), sqlx::Error> {
+    sqlx::Sqlite::drop_database(DATABASE_URL);
     Ok(())
 }

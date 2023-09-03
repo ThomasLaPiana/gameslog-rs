@@ -9,7 +9,7 @@ use tracing::Level;
 #[tokio::main]
 async fn start() -> anyhow::Result<()> {
     println!("> Running Migrations...");
-    database::run_migrations().await;
+    database::run_migrations().await?;
 
     // Set tracing for logs
     tracing_subscriber::fmt()

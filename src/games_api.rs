@@ -2,7 +2,7 @@ use crate::database;
 use crate::models::Game;
 use axum::http::StatusCode;
 use axum::response::{IntoResponse, Response};
-use axum::routing::{delete, get, post};
+use axum::routing::{get, post};
 use axum::{extract, Json, Router};
 use serde_json::{json, Value};
 use sqlx;
@@ -15,7 +15,6 @@ pub fn create_games_router() -> Router {
         .route("/health", get(health))
         .route("/api/games", get(list_games))
         .route("/api/games", post(create_game))
-        .route("/api/games/:game_id", delete(delete_game))
         .route("/api/games/:game_id", get(get_game))
 }
 
@@ -34,8 +33,8 @@ async fn health() -> Json<Value> {
 
 /// List all of the games stored in the database
 async fn list_games() -> Response {
-    let db = database::get_db_connection().await;
-    let games = sqlx::query_as!(Vec<Game>, "SELECT title, platform FROM games")
+    let mut db = database::get_db_connection().await.unwrap();
+    let games = sqlx::query_as!(Game, "SELECT title, platforms FROM games")
         .fetch_all(&mut db)
         .await
         .unwrap();
@@ -44,70 +43,31 @@ async fn list_games() -> Response {
 
 /// Get a specific game by its ID
 async fn get_game(extract::Path(game_id): extract::Path<String>) -> Response {
-    let db = database::get_db_connection().await;
-    let game = game::Entity::find_by_id(&game_id)
-        .into_json()
-        .one(&db)
-        .await;
+    let mut db = database::get_db_connection().await.unwrap();
+    let game = sqlx::query_as!(
+        Game,
+        "SELECT title, platforms FROM games where title = ?",
+        game_id
+    )
+    .fetch_one(&mut db)
+    .await
+    .unwrap();
 
-    match game {
-        Ok(game) => (StatusCode::OK, Json(json!({ "data": game }))).into_response(),
-        Err(_) => (
-            StatusCode::INTERNAL_SERVER_ERROR,
-            Json(json!({
-                "data": "Fata error occured!"})),
-        )
-            .into_response(),
-    }
+    (StatusCode::OK, Json(json!({ "data": game }))).into_response()
 }
 
 /// Add a new game to the Gameslog
 async fn create_game(extract::Json(payload): extract::Json<Game>) -> Response {
     let game_title = payload.title.clone();
-    let normalized_platforms = payload
-        .platforms
-        .iter()
-        .map(|platform| platform.to_string())
-        .collect::<Vec<String>>()
-        .join(",");
+    let game_platforms = payload.platforms.clone();
 
-    let new_game = game::ActiveModel {
-        title: Set(game_title),
-        platforms: Set(normalized_platforms),
-        ..Default::default()
-    };
-    let db = database::get_db_connection().await;
+    let mut db = database::get_db_connection().await.unwrap();
+    sqlx::query!("INSERT INTO games VALUES(?, ?)", game_title, game_platforms,)
+        .execute(&mut db)
+        .await
+        .unwrap();
 
-    match new_game.insert(&db).await {
-        Ok(_) => (StatusCode::CREATED, Json(json!({ "data": payload }))).into_response(),
-        Err(insertion) => (
-            StatusCode::INTERNAL_SERVER_ERROR,
-            Json(json!({ "data": insertion.to_string()})),
-        )
-            .into_response(),
-    }
-}
-
-/// Remove a game from the Gameslog
-async fn delete_game(extract::Path(game_id): extract::Path<String>) -> Response {
-    let db = database::get_db_connection().await;
-    let result = game::Entity::delete_by_id(&game_id).exec(&db).await;
-
-    match result {
-        Ok(_) => (
-            StatusCode::NO_CONTENT,
-            Json(json!({
-                "data": format!("Game with ID '{}' deleted!", game_id)
-            })),
-        )
-            .into_response(),
-        Err(result) => (
-            StatusCode::INTERNAL_SERVER_ERROR,
-            Json(json!({
-                "data": result.to_string()})),
-        )
-            .into_response(),
-    }
+    (StatusCode::CREATED, Json(json!({ "data": payload }))).into_response()
 }
 
 #[cfg(test)]
@@ -144,8 +104,8 @@ mod tests {
     #[tokio::test]
     async fn test_create_game() {
         let app = create_games_router();
-        database::reset_database().await;
-        database::run_migrations().await;
+        database::reset_database().unwrap();
+        database::run_migrations().await.unwrap();
 
         // Build the request
         let request = Request::builder()
@@ -181,7 +141,7 @@ mod tests {
     #[tokio::test]
     async fn test_create_game_invalid() {
         let app = create_games_router();
-        database::run_migrations().await;
+        database::run_migrations().await.unwrap();
 
         // Build the request
         let request = Request::builder()
