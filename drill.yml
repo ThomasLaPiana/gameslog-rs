@@ -1,13 +1,13 @@
----
-concurrency: 4
+# `drill -q -s -b drill.yml`
+concurrency: 20
 base: 'http://localhost:8080'
-iterations: 5
+iterations: 1000
 rampup: 2
 
 plan:
   - name: List Games
     request:
-      url: /api/games/
+      url: /api/games
 
   - name: Get a Game
     request:
