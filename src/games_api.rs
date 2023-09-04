@@ -48,7 +48,6 @@ async fn list_games(extract::Query(params): extract::Query<HashMap<String, Strin
         .await
         .unwrap();
 
-    println!("{:?}", &params);
     if params.contains_key("html") {
         return Html(GamesListTemplate{ games: games }.render().unwrap()).into_response();
     }
