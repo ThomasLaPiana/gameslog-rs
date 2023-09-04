@@ -9,6 +9,9 @@ on:
     branches: [main]
     paths-ignore: [README.md]
 
+env:
+  DATABASE_URL: sqlite://gameslog.sqlite?mode=rwc
+
 jobs:
   Suite:
     runs-on: ubuntu-latest
@@ -25,8 +28,8 @@ jobs:
 
       - name: Prepare Database
         run: |
-          sqlx database create --database-url "sqlite://gameslog.sqlite?mode=rwc"
-          sqlx migrate run --source src/migrations/ --database-url "sqlite://gameslog.sqlite?mode=rwc"
+          sqlx database create
+          sqlx migrate run --source src/migrations/
 
       - name: Build
         run: cargo build --release

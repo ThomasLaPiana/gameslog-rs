@@ -100,8 +100,8 @@ This is a list of additional planned features/changes
 
 ### Wholly New Features
 
-- Add a frontend/UI
 - Add users and authentication?
+- Add a fully TUI
 
 ## Resources
 
