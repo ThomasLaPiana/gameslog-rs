@@ -1,8 +1,8 @@
 # `drill -q -s -b drill.yml`
-concurrency: 10
+concurrency: 4
 base: "http://localhost:8080"
-iterations: 2000
-rampup: 2
+iterations: 1000
+rampup: 4
 
 plan:
   - name: List Games

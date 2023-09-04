@@ -1,6 +1,9 @@
 # Gameslog
 
-![Suite](https://github.com/github/docs/actions/workflows/rust.yml/badge.svg "CI Checks")
+[![CI Checks][ci-checks-workflow]][ci-checks-url]
+
+[ci-checks-workflow]: https://github.com/ethyca/fides/workflows/Suite/badge.svg
+[ci-checks-url]: https://github.com/ethyca/fides/actions/workflows/rust.yaml
 
 A simple CLI and Webserver for keeping track of game backlogs.
 
@@ -105,6 +108,7 @@ This is a list of additional planned features/changes
 
 - Add users and authentication?
 - Add a fully TUI
+- Publish to Cargo
 
 ## Resources
 
