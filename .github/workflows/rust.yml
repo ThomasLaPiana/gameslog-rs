@@ -17,16 +17,28 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
+      - name: Install Dependencies
+        run: |
+          rustup update
+          rustup component add clippy
+          cargo install sqlx-cli drill
+
+      - name: Prepare Database
+        run: |
+          sqlx database create
+          sqlx migrate run --source src/migrations/
+
       - name: Build
         run: cargo build --release
 
       - name: Format
         run: cargo fmt --check
 
+      - name: Lint
+        run: cargo clippy -- -D warnings
+
       - name: Test
         run: cargo test
 
       - name: Benchmarking
-        run: |
-          cargo install drill
-          drill -q -s -b drill.yml
+        run: drill -q -s -b drill.yml
