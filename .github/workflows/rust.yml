@@ -25,8 +25,8 @@ jobs:
 
       - name: Prepare Database
         run: |
-          sqlx database create
-          sqlx migrate run --source src/migrations/
+          sqlx database create --database-url "sqlite://gameslog.sqlite?mode=rwc"
+          sqlx migrate run --source src/migrations/ --database-url "sqlite://gameslog.sqlite?mode=rwc"
 
       - name: Build
         run: cargo build --release
