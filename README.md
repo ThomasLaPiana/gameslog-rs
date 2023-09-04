@@ -89,6 +89,7 @@ This is a list of additional planned features/changes
 
 * Refactor the CLI to support plain JSON
 * Add prettier output to the CLI for JSON responses using `cursive`
+* Add support for database connection pooling
 
 ### Wholly New Features
 

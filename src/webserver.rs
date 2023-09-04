@@ -6,7 +6,7 @@ use tower_http::trace::{self, TraceLayer};
 use tracing::Level;
 
 /// Run all server setup logic and start the server
-#[tokio::main]
+#[tokio::main(flavor="current_thread")]
 async fn start() -> anyhow::Result<()> {
     println!("> Running Migrations...");
     database::run_migrations().await?;
@@ -31,13 +31,14 @@ async fn start() -> anyhow::Result<()> {
 
     // run it with hyper on localhost:3000
     println!("> Starting server!");
-    axum::Server::bind(&"0.0.0.0:8080".parse().unwrap())
+    axum::Server::bind(&"127.0.0.1:8080".parse().unwrap())
         .serve(app.into_make_service())
         .await?;
 
     Ok(())
 }
 
+/// Wrapper function for starting the server
 pub fn start_webserver() {
     let result = start();
 
