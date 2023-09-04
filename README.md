@@ -1,17 +1,20 @@
 # Gameslog
 
+![Suite](https://github.com/github/docs/actions/workflows/rust.yml/badge.svg "CI Checks")
+
 A simple CLI and Webserver for keeping track of game backlogs.
 
 **Note:**
 
 The main purpose of this project is to learn about Rust and its ecosystem, with a focus on the following areas:
 
-- Building backend services (Axum)
-- Persisting data via SQLite (sqlx)
-- Building CLIs (Clap)
-- Build Systems/Publishing (Cargo, Cross)
+- Building backend services ([Axum](https://github.com/tokio-rs/axum))
+- Persisting data via SQLite ([sqlx](https://github.com/launchbadge/sqlx))
+- Building CLIs ([Clap](https://github.com/clap-rs/clap))
+- Build Systems/Publishing (Cargo, [Cross](https://github.com/cross-rs/cross))
 - Testing
-- Front-End (HTMX/Askama/Tailwind)
+- Benchmarking ([Drill](https://github.com/fcsonline/drill))
+- Front-End ([HTMX](https://htmx.org/)/[Askama](https://github.com/djc/askama)/[Tailwind](https://tailwindcss.com/))
 
 ## System Requirements
 
