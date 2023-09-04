@@ -13,7 +13,7 @@ pub fn create_games_router() -> Router {
     Router::new()
         // Add Routes
         .route("/api", get(root))
-        .route("/health", get(health))
+        .route("/api/health", get(health))
         .route("/api/games", get(list_games))
         .route("/api/games", post(create_game))
         .route("/api/games/:game_id", get(get_game))
@@ -103,7 +103,7 @@ mod tests {
         let response = app
             .oneshot(
                 Request::builder()
-                    .uri("/health")
+                    .uri("/api/health")
                     .body(Body::empty())
                     .unwrap(),
             )

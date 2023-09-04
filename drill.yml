@@ -1,7 +1,7 @@
 # `drill -q -s -b drill.yml`
-concurrency: 5
+concurrency: 10
 base: "http://localhost:8080"
-iterations: 500
+iterations: 2000
 rampup: 2
 
 plan:
@@ -12,3 +12,7 @@ plan:
   - name: Get a Game
     request:
       url: /api/games/Ghostrunner
+
+  - name: Healthcheck
+    request:
+      url: /api/health
