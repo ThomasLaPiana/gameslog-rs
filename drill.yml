@@ -1,6 +1,6 @@
 # `drill -q -s -b drill.yml`
 concurrency: 5
-base: 'http://localhost:8080'
+base: "http://localhost:8080"
 iterations: 500
 rampup: 2
 

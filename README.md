@@ -2,16 +2,16 @@
 
 A simple CLI and Webserver for keeping track of game backlogs.
 
-__Note:__
+**Note:**
 
 The main purpose of this project is to learn about Rust and its ecosystem, with a focus on the following areas:
 
-* Building backend services (Axum)
-* Persisting data via SQLite (sqlx)
-* Building CLIs (Clap)
-* Build Systems/Publishing (Cargo, Cross)
-* Testing
-* Front-End (HTMX/Askama/Tailwind)
+- Building backend services (Axum)
+- Persisting data via SQLite (sqlx)
+- Building CLIs (Clap)
+- Build Systems/Publishing (Cargo, Cross)
+- Testing
+- Front-End (HTMX/Askama/Tailwind)
 
 ## System Requirements
 
@@ -35,8 +35,8 @@ Games can be added one of two ways:
 
 For development, the following additional installations are required:
 
-* `cargo install sqlx-cli`
-* `cargo install cargo-watch`
+- `cargo install sqlx-cli`
+- `cargo install cargo-watch`
 
 ### Building & Testing
 
@@ -71,15 +71,15 @@ and visit `localhost:8080/api/games` to verify everything is working! Data has a
 
 Here is a list of helpful commands for getting started:
 
-* `cargo check` - Runs basic static analysis without the overhead of building
-* `cargo build` - Checks and builds the crate
-* `cargo test` - Runs unit and integration tests. This also compiles the crate.
-* `cargo fmt` - Runs unit and integration tests. This also compiles the crate.
-* `cargo run` - Runs the application (the CLI in this case)
+- `cargo check` - Runs basic static analysis without the overhead of building
+- `cargo build` - Checks and builds the crate
+- `cargo test` - Runs unit and integration tests. This also compiles the crate.
+- `cargo fmt` - Runs unit and integration tests. This also compiles the crate.
+- `cargo run` - Runs the application (the CLI in this case)
 
 Additionally there is a helpful utility called `cargo-watch` that will automatically run a certain command when file changes are detected:
 
-* `cargo watch -x <build|check|run|test>`
+- `cargo watch -x <build|check|run|test>`
 
 ## TODOs
 
@@ -87,11 +87,11 @@ This is a list of additional planned features/changes
 
 ### Iterative Updates
 
-* Refactor the CLI to support plain JSON
-* Add prettier output to the CLI for JSON responses using `cursive`
-* Add support for database connection pooling
+- Refactor the CLI to support plain JSON
+- Add prettier output to the CLI for JSON responses using `cursive`
+- Add support for database connection pooling
 
 ### Wholly New Features
 
-* Add a frontend/UI
-* Add users and authentication?
+- Add a frontend/UI
+- Add users and authentication?
