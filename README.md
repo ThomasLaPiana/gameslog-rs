@@ -53,7 +53,7 @@ Additionally there is a helpful utility called `cargo-watch` that will automatic
 * `cargo install cargo-watch`
 * `cargo watch -x <build|check|run|test>`
 
-### Database Migrations (To be changed)
+### Database Migrations
 
 1. `sqlx migrate run --source src/migrations/`
 
@@ -68,6 +68,5 @@ This is a list of additional planned features/changes
 
 ## Wholly New Features
 
-* CI/CD pipelines
 * Add users and authentication
 * Add a frontend/UI
