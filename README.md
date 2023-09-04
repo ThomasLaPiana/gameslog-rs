@@ -33,14 +33,43 @@ Games can be added one of two ways:
 
 ### Developer Requirements
 
-For development, the following additional installations are recommended and assumed:
+For development, the following additional installations are required:
 
 * `cargo install sqlx-cli`
 * `cargo install cargo-watch`
 
 ### Building & Testing
 
-The following is a list of helpful commands for getting started:
+#### Database
+
+On first run, it is necessary to create the database and run migrations using the `sqlx` CLI. This is because `sqlx` connects to the database at build time to provide checks and guarantee correctness. The first step is to create a `.env` with the following contents:
+
+```sh
+DATABASE_URL="sqlite://gameslog.sqlite?mode=rwc"
+```
+
+Next we can run the CLI command to create and migrate the database:
+
+1. `sqlx database create`
+1. `sqlx migrate run --source src/migrations/`
+
+#### Dev Commands
+
+Now that we've created and migrated the database, we can build the project:
+
+```sh
+cargo build
+```
+
+Spin up the server with:
+
+```sh
+cargo run webserver
+```
+
+and visit `localhost:8080/api/games` to verify everything is working! Data has already been seeded as part of the migrations.
+
+Here is a list of helpful commands for getting started:
 
 * `cargo check` - Runs basic static analysis without the overhead of building
 * `cargo build` - Checks and builds the crate
@@ -48,25 +77,20 @@ The following is a list of helpful commands for getting started:
 * `cargo fmt` - Runs unit and integration tests. This also compiles the crate.
 * `cargo run` - Runs the application (the CLI in this case)
 
-Additionally there is a helpful utility called `cargo-watch` that will automatically run a certain command when file changes are detected. It can be installed and invoked like so:
+Additionally there is a helpful utility called `cargo-watch` that will automatically run a certain command when file changes are detected:
 
-* `cargo install cargo-watch`
 * `cargo watch -x <build|check|run|test>`
-
-### Database Migrations
-
-1. `sqlx migrate run --source src/migrations/`
 
 ## TODOs
 
 This is a list of additional planned features/changes
 
-## Iterative Updates
+### Iterative Updates
 
 * Refactor the CLI to support plain JSON
 * Add prettier output to the CLI for JSON responses using `cursive`
 
-## Wholly New Features
+### Wholly New Features
 
-* Add users and authentication
 * Add a frontend/UI
+* Add users and authentication?
