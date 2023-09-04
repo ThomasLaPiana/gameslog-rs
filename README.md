@@ -1,6 +1,6 @@
 # Gameslog
 
-[![Worfklows](https://github.com/ThomasLaPiana/gameslog-rs/actions/workflows/rust.yml/badge.svg)](https://github.com/ThomasLaPiana/gameslog-rs/actions/workflows/rust.yml)
+[![CI Checks](https://github.com/ThomasLaPiana/gameslog-rs/actions/workflows/rust.yml/badge.svg)](https://github.com/ThomasLaPiana/gameslog-rs/actions/workflows/rust.yml)
 
 A simple CLI and Webserver for keeping track of game backlogs.
 
