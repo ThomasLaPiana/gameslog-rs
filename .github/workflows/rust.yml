@@ -25,3 +25,8 @@ jobs:
 
       - name: Test
         run: cargo test
+
+      - name: Benchmarking
+        run: |
+          cargo install drill
+          drill -q -s -b drill.yml
