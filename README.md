@@ -45,6 +45,7 @@ The following is a list of helpful commands for getting started:
 * `cargo check` - Runs basic static analysis without the overhead of building
 * `cargo build` - Checks and builds the crate
 * `cargo test` - Runs unit and integration tests. This also compiles the crate.
+* `cargo fmt` - Runs unit and integration tests. This also compiles the crate.
 * `cargo run` - Runs the application (the CLI in this case)
 
 Additionally there is a helpful utility called `cargo-watch` that will automatically run a certain command when file changes are detected. It can be installed and invoked like so:
@@ -55,3 +56,18 @@ Additionally there is a helpful utility called `cargo-watch` that will automatic
 ### Database Migrations (To be changed)
 
 1. `sqlx migrate run --source src/migrations/`
+
+## TODOs
+
+This is a list of additional planned features/changes
+
+## Iterative Updates
+
+* Refactor the CLI to support plain JSON
+* Add prettier output to the CLI for JSON responses using `cursive`
+
+## Wholly New Features
+
+* CI/CD pipelines
+* Add users and authentication
+* Add a frontend/UI
