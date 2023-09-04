@@ -6,6 +6,6 @@
 {% block content %}
 <h1 class="text-blue-500">Here are some games!</h1>
 
-<div hx-get="/api/games">Swap Me</div>
+<p hx-get="/api/games", hx-trigger="load">Loading...</p>
 
 {% endblock %}

@@ -1,10 +1,13 @@
 use crate::database;
 use crate::models::Game;
 use axum::http::StatusCode;
-use axum::response::{IntoResponse, Response};
+use axum::response::{IntoResponse, Response, Html};
 use axum::routing::{get, post};
 use axum::{extract, Json, Router};
 use serde_json::{json, Value};
+use::std::collections::HashMap;
+use askama::Template;
+
 
 /// Create a router with all of the endpoints used by the Games service
 pub fn create_games_router() -> Router {
@@ -30,13 +33,26 @@ async fn health() -> Json<Value> {
     }))
 }
 
+#[derive(Template)]
+#[template(path = "game_list.html")]
+struct GamesListTemplate{
+    games: Vec<Game>,
+}
+
 /// List all of the games stored in the database
-async fn list_games() -> Response {
+async fn list_games(extract::Query(params): extract::Query<HashMap<String, String>>) -> Response {
+
     let mut db = database::get_db_connection().await.unwrap();
     let games = sqlx::query_as!(Game, "SELECT title, platforms FROM games")
         .fetch_all(&mut db)
         .await
         .unwrap();
+
+    println!("{:?}", &params);
+    if params.contains_key("html") {
+        return Html(GamesListTemplate{ games: games }.render().unwrap()).into_response();
+    }
+
     (StatusCode::OK, Json(json!({ "data": games }))).into_response()
 }
 
