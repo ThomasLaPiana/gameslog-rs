@@ -3,8 +3,6 @@ name = "gameslog"
 version = "0.1.0"
 authors = ["ThomasLaPiana"]
 edition = "2021"
-publish = false
-default-run = "gameslog"
 
 [dependencies]
 anyhow = "1.0.71"
