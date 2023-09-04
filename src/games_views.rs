@@ -29,7 +29,7 @@ async fn list_games() -> impl IntoResponse {
 }
 #[derive(Template)]
 #[template(path = "games.html")]
-struct ListGamesTemplate;
+struct ListGamesTemplate{}
 
 #[derive(Template)]
 #[template(path = "index.html")]
