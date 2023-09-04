@@ -76,10 +76,17 @@ Here is a list of helpful commands for getting started:
 - `cargo test` - Runs unit and integration tests. This also compiles the crate.
 - `cargo fmt` - Runs unit and integration tests. This also compiles the crate.
 - `cargo run` - Runs the application (the CLI in this case)
+- `pnpm dlx tailwindcss -i styles/tailwind.css -o assets/main.css --watch` - Tells `Tailwind` to watch the files and build stuff
 
 Additionally there is a helpful utility called `cargo-watch` that will automatically run a certain command when file changes are detected:
 
-- `cargo watch -x <build|check|run|test>`
+- `cargo watch -x <build|check|test>`
+
+I find the most useful to be rebuilding and running the webserver on each change:
+
+```sh
+cargo watch -- cargo run webserver
+```
 
 ## TODOs
 
@@ -95,3 +102,9 @@ This is a list of additional planned features/changes
 
 - Add a frontend/UI
 - Add users and authentication?
+
+## Resources
+
+The following is a list of blogs/articles/docs I used to get this all up and running:
+
+- <https://joeymckenzie.tech/blog/templates-with-rust-axum-htmx-askama/>

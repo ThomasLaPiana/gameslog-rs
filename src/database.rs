@@ -1,4 +1,3 @@
-
 use sqlx::{migrate::MigrateDatabase, sqlite, ConnectOptions, Connection};
 use std::str::FromStr;
 

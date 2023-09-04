@@ -1,0 +1,16 @@
+<!-- prettier-ignore -->
+{% extends "base.html" %}
+
+{% block title %}Games{% endblock %}
+
+{% block content %}
+<h1 class="text-blue-500">Here are some games!</h1>
+<button
+type="button"
+hx-get="/api/hello"
+hx-swap="innerHtml"
+class="rounded-md bg-indigo-600 px-2.5 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+>
+Say hello
+</button>
+{% endblock %}

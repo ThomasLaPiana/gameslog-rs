@@ -6,7 +6,6 @@ use axum::routing::{get, post};
 use axum::{extract, Json, Router};
 use serde_json::{json, Value};
 
-
 /// Create a router with all of the endpoints used by the Games service
 pub fn create_games_router() -> Router {
     Router::new()

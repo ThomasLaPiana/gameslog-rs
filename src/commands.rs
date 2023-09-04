@@ -1,6 +1,5 @@
 use clap::ArgMatches;
 
-
 use serde::Serialize;
 
 #[derive(Debug, Serialize)]

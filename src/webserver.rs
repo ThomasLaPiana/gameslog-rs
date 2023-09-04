@@ -6,7 +6,7 @@ use tower_http::trace::{self, TraceLayer};
 use tracing::Level;
 
 /// Run all server setup logic and start the server
-#[tokio::main(flavor="current_thread")]
+#[tokio::main(flavor = "current_thread")]
 async fn start() -> anyhow::Result<()> {
     println!("> Running Migrations...");
     database::run_migrations().await?;
