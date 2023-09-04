@@ -1,9 +1,6 @@
 # Gameslog
 
-[![CI Checks][ci-checks-workflow]][ci-checks-url]
-
-[ci-checks-workflow]: https://github.com/ethyca/fides/workflows/Suite/badge.svg
-[ci-checks-url]: https://github.com/ethyca/fides/actions/workflows/rust.yaml
+[![Worfklows](https://github.com/ThomasLaPiana/gameslog-rs/actions/workflows/rust.yml/badge.svg)](https://github.com/ThomasLaPiana/gameslog-rs/actions/workflows/rust.yml)
 
 A simple CLI and Webserver for keeping track of game backlogs.
 
