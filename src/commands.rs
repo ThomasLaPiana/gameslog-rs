@@ -1,5 +1,5 @@
 use clap::ArgMatches;
-use reqwest;
+
 
 use serde::Serialize;
 
@@ -19,7 +19,7 @@ pub fn view_command() -> Result<String, reqwest::Error> {
     let status = response.status();
     let body = response.text()?;
     println!("Status: {}\nResponse Body: {:?}", status, body);
-    return Ok(body);
+    Ok(body)
 }
 
 /// Send a new Game to the webserver
@@ -33,7 +33,7 @@ pub fn add_command(new_game: GameInfo) -> Result<String, reqwest::Error> {
     let status = response.status();
     let body = response.text()?;
     println!("Status: {}\nResponse Body: {:?}", status, body);
-    return Ok(body);
+    Ok(body)
 }
 
 /// Delete a Game from the webserver
