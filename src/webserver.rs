@@ -11,6 +11,8 @@ async fn start() -> anyhow::Result<()> {
     println!("> Running Migrations...");
     database::run_migrations().await?;
 
+    // TODO: Use connection pooling
+
     // Set tracing for logs
     tracing_subscriber::fmt()
         .with_target(false)

@@ -2,7 +2,7 @@
 
 [![CI Checks](https://github.com/ThomasLaPiana/gameslog-rs/actions/workflows/rust.yml/badge.svg)](https://github.com/ThomasLaPiana/gameslog-rs/actions/workflows/rust.yml)
 
-A simple CLI and Webserver for keeping track of game backlogs.
+A Web App for keeping track of game backlogs.
 
 **Note:**
 
@@ -10,27 +10,20 @@ The main purpose of this project is to learn about Rust and its ecosystem, with 
 
 - Building backend services ([Axum](https://github.com/tokio-rs/axum))
 - Persisting data via SQLite ([sqlx](https://github.com/launchbadge/sqlx))
-- Building CLIs ([Clap](https://github.com/clap-rs/clap))
-- Build Systems/Publishing (Cargo, [Cross](https://github.com/cross-rs/cross))
-- Testing
+- Testing ([nextest](nexte.st))
 - Benchmarking ([Drill](https://github.com/fcsonline/drill))
 - Front-End ([HTMX](https://htmx.org/)/[Askama](https://github.com/djc/askama)/[Tailwind](https://tailwindcss.com/))
 
 ## System Requirements
 
 1. Cargo
-2. npm
+1. npm
+1. pnpm
+1. Tailwind
 
 ## Usage
 
 The first thing to do to get up and running is to `git clone` the repo and make sure you have `cargo` installed.
-
-From the root of the directory, run `cargo run` to see the `help` output of the CLI. To get the weberver going, run `cargo run webserver`
-
-Games can be added one of two ways:
-
-1. Via the REST API
-1. Via the CLI
 
 ## Development
 
@@ -39,6 +32,7 @@ Games can be added one of two ways:
 For development, the following additional installations are required:
 
 - `cargo install sqlx-cli`
+- `cargo install rox-cli`
 - `cargo install cargo-watch`
 
 ### Building & Testing
@@ -51,61 +45,28 @@ On first run, it is necessary to create the database and run migrations using th
 DATABASE_URL="sqlite://gameslog.sqlite?mode=rwc"
 ```
 
-Next we can run the CLI command to create and migrate the database:
+Next we can run the `rox` command to create and migrate the database:
 
-1. `sqlx database create`
-1. `sqlx migrate run --source src/migrations/`
+```sh
+rox pl setupdb
+```
 
 #### Dev Commands
 
-Now that we've created and migrated the database, we can build the project:
+Now that we've created and migrated the database, we can run the project!
 
 ```sh
-cargo build
+rox task ws
 ```
 
-Spin up the server with:
+This command will run the webserver and watch the local filesystem for changes, triggering a reload.
 
-```sh
-cargo run webserver
-```
+Visit `localhost:8080/` to verify everything is working! Data has already been seeded as part of the migrations.
 
-and visit `localhost:8080/api/games` to verify everything is working! Data has already been seeded as part of the migrations.
+Here are some additional commands that may be useful:
 
-Here is a list of helpful commands for getting started:
-
-- `cargo check` - Runs basic static analysis without the overhead of building
-- `cargo build` - Checks and builds the crate
-- `cargo test` - Runs unit and integration tests. This also compiles the crate.
-- `cargo fmt` - Runs unit and integration tests. This also compiles the crate.
-- `cargo run` - Runs the application (the CLI in this case)
-- `pnpm dlx tailwindcss -i styles/tailwind.css -o assets/main.css --watch` - Tells `Tailwind` to watch the files and build stuff
-
-Additionally there is a helpful utility called `cargo-watch` that will automatically run a certain command when file changes are detected:
-
-- `cargo watch -x <build|check|test>`
-
-I find the most useful to be rebuilding and running the webserver on each change:
-
-```sh
-cargo watch -- cargo run webserver
-```
-
-## TODOs
-
-This is a list of additional planned features/changes
-
-### Iterative Updates
-
-- Refactor the CLI to support plain JSON
-- Add prettier output to the CLI for JSON responses using `cursive`
-- Add support for database connection pooling
-
-### Wholly New Features
-
-- Add users and authentication?
-- Add a fully TUI
-- Publish to Cargo
+- `rox pl ci` - Runs all of the CI-style checks, including linting and testing
+- `rox task tailwind` - Runs `tailwind` in `watch` mode
 
 ## Resources
 
