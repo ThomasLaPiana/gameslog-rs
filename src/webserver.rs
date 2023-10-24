@@ -31,9 +31,9 @@ async fn start() -> anyhow::Result<()> {
     let games_views = games_views::create_game_views_router();
     let app = Router::new().merge(games_api).merge(games_views);
 
-    // run it with hyper on localhost:3000
-    println!("> Starting server!");
-    axum::Server::bind(&"127.0.0.1:8080".parse().unwrap())
+    let server_address = "127.0.0.1:8080";
+    println!("> Starting server at address 'http://{server_address}'...");
+    axum::Server::bind(&server_address.parse().unwrap())
         .serve(app.into_make_service())
         .await?;
 

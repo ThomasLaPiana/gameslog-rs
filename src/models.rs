@@ -6,3 +6,10 @@ pub struct Game {
     pub title: String,
     pub platforms: String,
 }
+
+#[derive(Serialize, Deserialize, Debug, Default)]
+pub struct GameResponse {
+    pub id: String,
+    pub title: String,
+    pub platforms: String,
+}

@@ -1,5 +1,5 @@
 use crate::database;
-use crate::models::Game;
+use crate::models::{Game, GameResponse};
 use ::std::collections::HashMap;
 use askama::Template;
 use axum::http::StatusCode;
@@ -7,6 +7,7 @@ use axum::response::{Html, IntoResponse, Response};
 use axum::routing::{get, post};
 use axum::{extract, Json, Router};
 use serde_json::{json, Value};
+use uuid::Uuid;
 
 /// Create a router with all of the endpoints used by the Games service
 pub fn create_games_router() -> Router {
@@ -58,8 +59,8 @@ async fn get_game(extract::Path(game_id): extract::Path<String>) -> Response {
     let mut db = database::get_db_connection().await.unwrap();
     // TODO: Make the match case insensitive
     let game = sqlx::query_as!(
-        Game,
-        "SELECT title, platforms FROM games where title = ?",
+        GameResponse,
+        "SELECT id, title, platforms FROM games where id = ?",
         game_id
     )
     .fetch_one(&mut db)
@@ -76,12 +77,17 @@ async fn create_game(extract::Json(payload): extract::Json<Game>) -> Response {
     let game_title = payload.title.clone();
     let game_platforms = payload.platforms.clone();
 
-    // TOOD: enforce uniqueness
     let mut db = database::get_db_connection().await.unwrap();
-    sqlx::query!("INSERT INTO games VALUES(?, ?)", game_title, game_platforms,)
-        .execute(&mut db)
-        .await
-        .unwrap();
+    let id = Uuid::new_v4().to_string();
+    sqlx::query!(
+        "INSERT INTO games VALUES(?, ?, ?)",
+        id,
+        game_title,
+        game_platforms,
+    )
+    .execute(&mut db)
+    .await
+    .unwrap();
 
     (StatusCode::CREATED, Json(json!({ "data": payload }))).into_response()
 }

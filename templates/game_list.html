@@ -1,18 +1,18 @@
 <div id="Games List">
-    <table class="table-auto border border-slate-950">
-        <thead>
-            <tr>
-                <th class="border border-slate-950">Game</th>
-                <th class="border border-slate-950">Platforms</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for game in games %}
-            <tr>
-                <td class="border border-slate-500">{{ game.title }}</td>
-                <td class="border border-slate-500">{{ game.platforms }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+  <table class="table-auto border border-slate-950">
+    <thead>
+      <tr>
+        <th class="border border-slate-950">Game</th>
+        <th class="border border-slate-950">Platforms</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for game in games %}
+      <tr>
+        <td class="border border-slate-500">{{ game.title }}</td>
+        <td class="border border-slate-500">{{ game.platforms }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
 </div>

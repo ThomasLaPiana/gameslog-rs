@@ -13,12 +13,19 @@ pub fn create_game_views_router() -> Router {
         // Add Routes
         .route("/", get(index))
         .route("/games", get(list_games))
+        .route("/gameslog", get(gameslog))
         .nest_service("/assets", ServeDir::new(assets_path))
 }
 
 /// Base Route
 async fn index() -> impl IntoResponse {
     let template = IndexTemplate {};
+    HtmlTemplate(template)
+}
+
+/// Gameslog
+async fn gameslog() -> impl IntoResponse {
+    let template = GameslogTemplate {};
     HtmlTemplate(template)
 }
 
@@ -34,6 +41,10 @@ struct ListGamesTemplate {}
 #[derive(Template)]
 #[template(path = "index.html")]
 struct IndexTemplate;
+
+#[derive(Template)]
+#[template(path = "gameslog.html")]
+struct GameslogTemplate;
 
 /// A wrapper type that we'll use to encapsulate HTML parsed by askama into valid HTML for axum to serve.
 struct HtmlTemplate<T>(T);

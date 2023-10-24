@@ -26,7 +26,7 @@ pub async fn run_migrations() -> Result<(), sqlx::Error> {
             Err(e) => println!("Error creating database: {}", e),
         }
     } else {
-        println!("Database already exists");
+        println!("Database already exists!");
     }
 
     let mut db_connection = get_db_connection().await?;
